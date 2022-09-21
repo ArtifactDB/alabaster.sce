@@ -1,0 +1,60 @@
+---
+title: Saving `SingleCellExperiment`s to artifacts and back again
+author:
+- name: Aaron Lun
+  email: infinite.monkeys.with.keyboards@gmail.com
+package: alabaster.sce
+date: "Revised: September 22, 2022"
+output:
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Saving and loading SingleCellExperiments}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE}
+library(BiocStyle)
+self <- Githubpkg("ArtifactDB/alabaster.sce")
+knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
+```
+
+# Overview 
+
+The `r self` package implements methods to save `SingleCellExperiment` objects to file artifacts and load them back into R.
+Check out the `r Githubpkg("ArtifactDB/alabaster.base")` for more details on the motivation and concepts of the **alabaster** framework.
+
+# Quick start
+
+Given a `(Ranged)SingleCellExperiment`, we can use `stageObject()` to save it inside a staging directory:
+
+```{r}
+library(SingleCellExperiment)
+example(SingleCellExperiment, echo=FALSE) # can't be bothered to copy it here.
+sce
+
+library(alabaster.sce)
+tmp <- tempfile()
+dir.create(tmp)
+meta <- stageObject(sce, tmp, "sce")
+.writeMetadata(meta, tmp)
+
+list.files(tmp, recursive=TRUE)
+```
+
+We can then load it back into the session with `loadObject()`.
+
+```{r}
+meta <- acquireMetadata(tmp, "sce/experiment.json")
+roundtrip <- loadObject(meta, tmp)
+class(roundtrip)
+```
+
+More details on the metadata and on-disk layout are provided in the [schema](https://artifactdb.github.io/BiocObjectSchemas/html/single_cell_experiment/v1.html).
+
+# Session information {-}
+
+```{r}
+sessionInfo()
+```
+

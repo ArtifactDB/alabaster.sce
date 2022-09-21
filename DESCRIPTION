@@ -18,6 +18,8 @@ Imports:
     alabaster.matrix
 Suggests:
     knitr,
-    testthat
+    testthat,
+    BiocStyle,
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.2.1
