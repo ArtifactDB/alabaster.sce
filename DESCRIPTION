@@ -1,0 +1,23 @@
+Package: alabaster.sce
+Title: Load and Save SingleCellExperiment from File
+Version: 0.98.0
+Date: 2022-09-20
+Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
+License: MIT + file LICENSE
+Description: 
+    Save SingleCellExperiment into file artifacts, and load them back into memory.
+    This is a more portable alternative to serialization of such objects into RDS files.
+    Each artifact is associated with metadata for further interpretation;
+    downstream applications can enrich this metadata with context-specific properties.
+Depends:
+    SingleCellExperiment,
+    alabaster.base
+Imports:
+    methods,
+    alabaster.se,
+    alabaster.matrix
+Suggests:
+    knitr,
+    testthat
+VignetteBuilder: knitr
+RoxygenNote: 7.2.1
