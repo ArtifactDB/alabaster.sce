@@ -14,8 +14,7 @@ Depends:
     alabaster.base
 Imports:
     methods,
-    alabaster.se,
-    alabaster.matrix
+    alabaster.se
 Suggests:
     knitr,
     testthat,
