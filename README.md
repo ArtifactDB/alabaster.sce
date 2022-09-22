@@ -1,6 +1,6 @@
 # Save `SingleCellExperiment`s to file
 
-The **alabaster.se** package implements methods for saving and loading `SingleCellExperiment` objects under the **alabaster** framework.
+The **alabaster.sce** package implements methods for saving and loading `SingleCellExperiment` objects under the **alabaster** framework.
 It provides a language-agnostic method for serializing reduced dimensions and alternative experiments along with the usual bits and pieces from the `SummarizedExperiment` parent class.
 To get started, install the package and its dependencies from GitHub:
 
