@@ -21,6 +21,10 @@ The actual path used to save \code{x} may include additional components, see Det
 
 \item{...}{Further arguments to pass to the RangedSummarizedExperiment method.}
 }
+\value{
+A named list of metadata that follows the \code{single_cell_experiment} schema.
+The contents of \code{x} are saved into a \code{path} subdirectory inside \code{dir}.
+}
 \description{
 Save a \linkS4class{SingleCellExperiment} to file inside the staging directory.
 }

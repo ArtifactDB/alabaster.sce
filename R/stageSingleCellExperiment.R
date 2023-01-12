@@ -9,6 +9,9 @@
 #'
 #' @author Aaron Lun
 #' 
+#' @return A named list of metadata that follows the \code{single_cell_experiment} schema.
+#' The contents of \code{x} are saved into a \code{path} subdirectory inside \code{dir}.
+#' 
 #' @examples
 #' # Mocking up an SCE:
 #' mat <- matrix(rpois(10000, 10), ncol=10)
