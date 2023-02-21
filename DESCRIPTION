@@ -1,7 +1,7 @@
 Package: alabaster.sce
 Title: Load and Save SingleCellExperiment from File
-Version: 0.99.0
-Date: 2023-01-12
+Version: 0.99.1
+Date: 2023-02-20
 Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
 License: MIT + file LICENSE
 Description: 

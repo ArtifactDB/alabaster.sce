@@ -45,6 +45,13 @@ setMethod("stageObject", "SingleCellExperiment", function(x, dir, path, child=FA
     # Staging the reduced dimensions.
     red.nms <- reducedDimNames(x)
     if (length(red.nms)) {
+        if (anyDuplicated(red.nms)) {
+            stop("detected duplicate names for reduced dimensions in a ", class(x)[1], " object")
+        }
+        if (any(red.nms == "")) {
+            stop("detected empty names for reduced dimensions in a ", class(x)[1], " object")
+        }
+
         entries <- vector('list', length(red.nms))
         for (i in seq_along(red.nms)) {
             red.path <- file.path(path, paste0("reddim-", i))
@@ -65,6 +72,13 @@ setMethod("stageObject", "SingleCellExperiment", function(x, dir, path, child=FA
     # Staging the alternative experiments.
     alt.nms <- altExpNames(x) 
     if (length(alt.nms)) {
+        if (anyDuplicated(alt.nms)) {
+            stop("detected duplicate names for alternative experiments in a ", class(x)[1], " object")
+        }
+        if (any(alt.nms == "")) {
+            stop("detected empty names for alternative experiments in a ", class(x)[1], " object")
+        }
+
         entries <- vector("list", length(alt.nms))
         for (i in seq_along(alt.nms)) {
             alt.path <- file.path(path, paste0("altexp-", i))
@@ -84,6 +98,9 @@ setMethod("stageObject", "SingleCellExperiment", function(x, dir, path, child=FA
 
     main.nm <- mainExpName(x)
     if (!is.null(main.nm)) {
+        if (any(alt.nms == main.nm)) {
+            stop("conflicting name '", main.nm, "' for main and alternative experiments in a ", class(x)[1], " object")
+        }
         sce.details$main_experiment_name <- main.nm
     }
 

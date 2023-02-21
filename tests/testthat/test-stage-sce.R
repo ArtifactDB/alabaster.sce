@@ -50,6 +50,19 @@ test_that("stageObject works as expected with reduced dims inside", {
     expect_identical(as.matrix(reducedDim(out, "TSNE")), reducedDim(se, "TSNE"))
 })
 
+test_that("stageObject fails with non-unique, non-empty reduced dim names", {
+    reducedDims(se) <- list(PCA=matrix(rnorm(ncol(mat)*50), ncol=50), TSNE=cbind(TSNE1=runif(ncol(mat)), TSNE2=runif(ncol(mat))))
+    colnames(int_colData(se)$reducedDims) <- c("FOO", "FOO") # need to force the issue as the setters don't normally allow duplicates.
+
+    tmp <- tempfile()
+    dir.create(tmp)
+    expect_error(info <- stageObject(se, tmp, "rnaseq"), "duplicate")
+
+    colnames(int_colData(se)$reducedDims) <- c("", "FOO") 
+    unlink(file.path(tmp, "rnaseq"), recursive=TRUE)
+    expect_error(info <- stageObject(se, tmp, "rnaseq"), "empty")
+})
+
 test_that("stageObject works as expected with alternative experiments inside", {
     tmp <- tempfile()
     dir.create(tmp)
@@ -68,11 +81,23 @@ test_that("stageObject works as expected with alternative experiments inside", {
     expect_identical(rownames(altExp(round, 2)), rownames(altExp(se, 2)))
 })
 
+test_that("stageObject fails with non-unique, non-empty altexp names", {
+    copy <- se
+    altExps(se) <- list(spikes=copy[1:2,], protein=copy[3:5,])
+    colnames(int_colData(se)$altExps) <- c("FOO", "FOO") # need to force the issue as the setters don't normally allow duplicates.
+
+    tmp <- tempfile()
+    dir.create(tmp)
+    expect_error(info <- stageObject(se, tmp, "rnaseq"), "duplicate")
+
+    colnames(int_colData(se)$altExps) <- c("", "FOO") 
+    unlink(file.path(tmp, "rnaseq"), recursive=TRUE)
+    expect_error(info <- stageObject(se, tmp, "rnaseq"), "empty")
+})
+
 test_that("stageObject works as expected when we slap in a main name", {
     tmp <- tempfile()
     dir.create(tmp)
-
-    copy <- se
     mainExpName(se) <- "FOO"
 
     info <- stageObject(se, tmp, "rnaseq")
@@ -82,4 +107,9 @@ test_that("stageObject works as expected when we slap in a main name", {
 
     round <- loadSingleCellExperiment(info, tmp)
     expect_identical(mainExpName(round), "FOO")
+
+    # Fails if there's an alternative experiment with the same name.
+    altExp(se, "FOO") <- se[1:10,]
+    unlink(file.path(tmp, "rnaseq"), recursive=TRUE)
+    expect_error(stageObject(se, tmp, "rnaseq"), "conflicting name 'FOO'")
 })
