@@ -1,5 +1,5 @@
 # This tests the stageObject generic for SCE's.
-# library(testthat); library(alabaster.sce); source("test-stage-sce.R")
+# library(testthat); library(alabaster.sce); source("test-SingleCellExperiment.R")
 
 # Making an SE and annotating it.
 mat <- matrix(rpois(2000, 10), ncol=10)
@@ -28,6 +28,14 @@ test_that("stageObject works as expected for SCE objects", {
     expect_s4_class(out, "SingleCellExperiment")
     expect_equal(rowData(out), rowData(se))
     expect_equal(colData(out), colData(se))
+
+    # New world works.
+    tmp <- tempfile()
+    saveObject(se, tmp)
+    out2 <- readObject(tmp)
+    expect_s4_class(out2, "SingleCellExperiment")
+    expect_identical(rowData(out2), rowData(se))
+    expect_identical(colData(out2), colData(se))
 })
 
 test_that("stageObject works as expected with reduced dims inside", {
@@ -48,6 +56,14 @@ test_that("stageObject works as expected with reduced dims inside", {
     expect_identical(reducedDimNames(out), reducedDimNames(se))
     expect_identical(as.matrix(reducedDim(out, "PCA")), reducedDim(se, "PCA"))
     expect_identical(as.matrix(reducedDim(out, "TSNE")), reducedDim(se, "TSNE"))
+
+    # New world works.
+    tmp <- tempfile()
+    saveObject(se, tmp)
+    out2 <- readObject(tmp)
+    expect_identical(reducedDimNames(out2), reducedDimNames(se))
+    expect_identical(as.matrix(reducedDim(out2, "PCA")), reducedDim(se, "PCA"))
+    expect_identical(as.matrix(reducedDim(out2, "TSNE")), reducedDim(se, "TSNE"))
 })
 
 test_that("stageObject fails with non-unique, non-empty reduced dim names", {
@@ -79,6 +95,14 @@ test_that("stageObject works as expected with alternative experiments inside", {
     expect_identical(altExpNames(round), altExpNames(se))
     expect_identical(rownames(altExp(round, 1)), rownames(altExp(se, 1)))
     expect_identical(rownames(altExp(round, 2)), rownames(altExp(se, 2)))
+
+    # New world works.
+    tmp <- tempfile()
+    saveObject(se, tmp)
+    out2 <- readObject(tmp)
+    expect_identical(altExpNames(out2), altExpNames(se))
+    expect_identical(rownames(altExp(out2, 1)), rownames(altExp(se, 1)))
+    expect_identical(rownames(altExp(out2, 2)), rownames(altExp(se, 2)))
 })
 
 test_that("stageObject fails with non-unique, non-empty altexp names", {
@@ -108,8 +132,15 @@ test_that("stageObject works as expected when we slap in a main name", {
     round <- loadSingleCellExperiment(info, tmp)
     expect_identical(mainExpName(round), "FOO")
 
+    # New world works.
+    tmp2 <- tempfile()
+    saveObject(se, tmp2)
+    out2 <- readObject(tmp2)
+    expect_identical(mainExpName(out2), "FOO")
+
     # Fails if there's an alternative experiment with the same name.
     altExp(se, "FOO") <- se[1:10,]
     unlink(file.path(tmp, "rnaseq"), recursive=TRUE)
     expect_error(stageObject(se, tmp, "rnaseq"), "conflicting name 'FOO'")
+
 })

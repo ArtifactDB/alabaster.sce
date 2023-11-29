@@ -1,10 +1,9 @@
-#' Stage an experiment
+#' Save a SingleCellExperiment
 #'
 #' Save a \linkS4class{SingleCellExperiment} to file inside the staging directory.
 #' 
 #' @param x A \linkS4class{SingleCellExperiment} object or one of its subclasses.
-#' @inheritParams alabaster.base::stageObject
-#' @param rd.name String containing the prefix of the file to save the reduced dimensions.
+#' @inheritParams alabaster.base::saveObject
 #' @param ... Further arguments to pass to the RangedSummarizedExperiment method.
 #'
 #' @author Aaron Lun
@@ -29,14 +28,67 @@
 #'
 #' # Staging it: 
 #' tmp <- tempfile()
-#' dir.create(tmp)
-#' stageObject(se, dir=tmp, "rna-seq") 
-#' list.files(file.path(tmp, "rna-seq"))
+#' saveObject(se, tmp)
+#' list.files(tmp, recursive=TRUE)
 #' 
+#' @name saveSingleCellExperiment
+#' @aliases 
+#' stageObject,SingleCellExperiment-method
+NULL
+
 #' @export
-#' @rdname stageSingleCellExperiment
-#' @aliases stageObject,ReducedDimensions-method
+#' @rdname saveSingleCellExperiment
 #' @import SingleCellExperiment alabaster.base methods
+#' @importFrom jsonlite toJSON
+setMethod("saveObject", "SingleCellExperiment", function(x, path, ...) {
+    callNextMethod()
+
+    red.nms <- reducedDimNames(x)
+    if (length(red.nms)) {
+        rddir <- file.path(path, "reduced_dimensions")
+        dir.create(rddir, showWarnings=FALSE)
+        for (i in seq_along(red.nms)) {
+            red.path <- file.path(rddir, i - 1L)
+            tryCatch({
+                altSaveObject(reducedDim(x, red.nms[i], withDimnames=FALSE), red.path, ...)
+            }, error=function(e) {
+                stop("failed to stage 'reducedDim(<", class(x)[1], ">, \"", red.nms[i], "\")'\n  - ", e$message)
+            })
+        }
+        write(toJSON(red.nms), file=file.path(rddir, "names.json"))
+    }
+
+    alt.nms <- altExpNames(x) 
+    if (length(alt.nms)) {
+        aedir <- file.path(path, "alternative_experiments")
+        dir.create(aedir, showWarnings=FALSE)
+        for (i in seq_along(alt.nms)) {
+            alt.path <- file.path(aedir, i - 1L)
+            tryCatch({ 
+                altSaveObject(altExp(x, alt.nms[i], withDimnames=FALSE), alt.path, ...)
+            }, error =function(e) {
+                stop("failed to stage 'altExp(<", class(x)[1], ">, \"", alt.nms[i], "\")'\n  - ", e$message)
+            })
+        }
+        write(toJSON(alt.nms), file=file.path(aedir, "names.json"))
+    }
+
+    info <- list(version="1.0")
+    main.nm <- mainExpName(x)
+    if (!is.null(main.nm)) {
+        info$main_experiment_name <- main.nm
+    }
+
+    write(file=file.path(path, "OBJECT"), "single_cell_experiment")
+    write(toJSON(info, auto_unbox=TRUE), file=file.path(path, "single_cell_experiment.json"))
+    invisible(NULL)
+})
+
+##################################
+######### OLD STUFF HERE #########
+##################################
+
+#' @export
 setMethod("stageObject", "SingleCellExperiment", function(x, dir, path, child=FALSE, rd.name="dimreds", ...) {
     meta <- callNextMethod()
     sce.details <- list()

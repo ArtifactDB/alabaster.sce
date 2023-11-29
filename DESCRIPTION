@@ -14,7 +14,8 @@ Depends:
     alabaster.base
 Imports:
     methods,
-    alabaster.se
+    alabaster.se,
+    jsonlite
 Suggests:
     knitr,
     testthat,

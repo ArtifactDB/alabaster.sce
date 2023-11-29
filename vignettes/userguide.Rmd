@@ -4,7 +4,7 @@ author:
 - name: Aaron Lun
   email: infinite.monkeys.with.keyboards@gmail.com
 package: alabaster.sce
-date: "Revised: September 22, 2022"
+date: "Revised: November 29, 2023"
 output:
   BiocStyle::html_document
 vignette: >
@@ -15,14 +15,14 @@ vignette: >
 
 ```{r, echo=FALSE}
 library(BiocStyle)
-self <- Githubpkg("ArtifactDB/alabaster.sce")
+self <- Biocpkg("alabaster.sce")
 knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
 ```
 
 # Overview 
 
 The `r self` package implements methods to save `SingleCellExperiment` objects to file artifacts and load them back into R.
-Check out the `r Githubpkg("ArtifactDB/alabaster.base")` for more details on the motivation and concepts of the **alabaster** framework.
+Check out the `r Biocpkg("alabaster.base")` for more details on the motivation and concepts of the **alabaster** framework.
 
 # Quick start
 
@@ -35,9 +35,7 @@ sce
 
 library(alabaster.sce)
 tmp <- tempfile()
-dir.create(tmp)
-meta <- stageObject(sce, tmp, "sce")
-.writeMetadata(meta, tmp)
+saveObject(sce, tmp)
 
 list.files(tmp, recursive=TRUE)
 ```
@@ -45,12 +43,9 @@ list.files(tmp, recursive=TRUE)
 We can then load it back into the session with `loadObject()`.
 
 ```{r}
-meta <- acquireMetadata(tmp, "sce/experiment.json")
-roundtrip <- loadObject(meta, tmp)
+roundtrip <- readObject(tmp)
 class(roundtrip)
 ```
-
-More details on the metadata and on-disk layout are provided in the [schema](https://artifactdb.github.io/BiocObjectSchemas/html/single_cell_experiment/v1.html).
 
 # Session information {-}
 
