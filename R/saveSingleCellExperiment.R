@@ -79,8 +79,10 @@ setMethod("saveObject", "SingleCellExperiment", function(x, path, ...) {
         info$main_experiment_name <- main.nm
     }
 
-    write(file=file.path(path, "OBJECT"), "single_cell_experiment")
-    write(toJSON(info, auto_unbox=TRUE), file=file.path(path, "single_cell_experiment.json"))
+    meta <- readObjectFile(path)
+    meta$single_cell_experiment <- info
+    saveObjectFile(path, "single_cell_experiment", meta)
+
     invisible(NULL)
 })
 

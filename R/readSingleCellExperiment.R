@@ -1,8 +1,10 @@
 #' Read a SingleCellExperiment from disk
 #'
 #' Read a \linkS4class{SingleCellExperiment} object from its on-disk representation.
+#' This is usually not directly called by users, but is instead called by dispatch in \code{\link{readObject}}.
 #'
 #' @param path String containing a path to a directory, itself created using the \code{\link{stageObject}} method for \linkS4class{SingleCellExperiment} objects.
+#' @param metadata Named list of metadata for this object, see \code{\link{readObjectFile}} for details.
 #' @param ... Further arguments passed to \code{\link{readRangedSummarizedExperiment}} and internal \code{\link{altReadObject}} calls.
 #' 
 #' @return A \linkS4class{SingleCellExperiment} object.
@@ -27,15 +29,16 @@
 #' # Staging it: 
 #' tmp <- tempfile()
 #' saveObject(se, tmp)
-#' readSingleCellExperiment(tmp)
+#' readObject(tmp)
 #'
 #' @export
 #' @aliases loadSingleCellExperiment
 #' @importFrom alabaster.se loadSummarizedExperiment
 #' @import SingleCellExperiment alabaster.base 
 #' @importFrom jsonlite fromJSON
-readSingleCellExperiment <- function(path, ...) {
-    se <- altReadObject(path, type="ranged_summarized_experiment", ...)
+readSingleCellExperiment <- function(path, metadata, ...) {
+    metadata$type <- "ranged_summarized_experiment"
+    se <- altReadObject(path, metadata, ...)
     se <- as(se, "SingleCellExperiment")
 
     rddir <- file.path(path, "reduced_dimensions")
@@ -60,7 +63,7 @@ readSingleCellExperiment <- function(path, ...) {
         altExps(se) <- all.altexps
     }
 
-    info <- fromJSON(file.path(path, "single_cell_experiment.json"))
+    info <- metadata$single_cell_experiment
     main.nm <- info$main_experiment_name
     if (!is.null(main.nm)) {
         mainExpName(se) <- main.nm

@@ -5,10 +5,12 @@
 \alias{loadSingleCellExperiment}
 \title{Read a SingleCellExperiment from disk}
 \usage{
-readSingleCellExperiment(path, ...)
+readSingleCellExperiment(path, metadata, ...)
 }
 \arguments{
 \item{path}{String containing a path to a directory, itself created using the \code{\link{stageObject}} method for \linkS4class{SingleCellExperiment} objects.}
+
+\item{metadata}{Named list of metadata for this object, see \code{\link{readObjectFile}} for details.}
 
 \item{...}{Further arguments passed to \code{\link{readRangedSummarizedExperiment}} and internal \code{\link{altReadObject}} calls.}
 }
@@ -17,6 +19,7 @@ A \linkS4class{SingleCellExperiment} object.
 }
 \description{
 Read a \linkS4class{SingleCellExperiment} object from its on-disk representation.
+This is usually not directly called by users, but is instead called by dispatch in \code{\link{readObject}}.
 }
 \examples{
 # Mocking up an SCE:
@@ -36,7 +39,7 @@ altExps(se) <- list(spikes=SummarizedExperiment(list(counts=mat[1:2,])))
 # Staging it: 
 tmp <- tempfile()
 saveObject(se, tmp)
-readSingleCellExperiment(tmp)
+readObject(tmp)
 
 }
 \author{
