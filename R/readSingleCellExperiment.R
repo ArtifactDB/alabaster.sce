@@ -49,7 +49,7 @@ readSingleCellExperiment <- function(path, metadata, ...) {
             all.reddims[[y]] <- altReadObject(file.path(rddir, y - 1L), ...)
         }
         names(all.reddims) <- reddim.names
-        reducedDims(se) <- all.reddims
+        reducedDims(se, withDimnames=FALSE) <- all.reddims
     }
 
     aedir <- file.path(path, "alternative_experiments")
@@ -60,7 +60,7 @@ readSingleCellExperiment <- function(path, metadata, ...) {
             all.altexps[[y]] <- altReadObject(file.path(aedir, y - 1L), ...)
         }
         names(all.altexps) <- altexp.names 
-        altExps(se) <- all.altexps
+        altExps(se, withDimnames=FALSE) <- all.altexps
     }
 
     info <- metadata$single_cell_experiment
