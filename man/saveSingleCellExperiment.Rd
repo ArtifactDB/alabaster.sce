@@ -4,7 +4,7 @@
 \alias{saveSingleCellExperiment}
 \alias{stageObject,SingleCellExperiment-method}
 \alias{saveObject,SingleCellExperiment-method}
-\title{Save a SingleCellExperiment}
+\title{Save a SingleCellExperiment to disk}
 \usage{
 \S4method{saveObject}{SingleCellExperiment}(x, path, ...)
 }
@@ -16,11 +16,10 @@
 \item{...}{Further arguments to pass to the RangedSummarizedExperiment method.}
 }
 \value{
-A named list of metadata that follows the \code{single_cell_experiment} schema.
-The contents of \code{x} are saved into a \code{path} subdirectory inside \code{dir}.
+\code{x} is saved into \code{path} and \code{NULL} is invisibly returned.
 }
 \description{
-Save a \linkS4class{SingleCellExperiment} to file inside the staging directory.
+Save a \linkS4class{SingleCellExperiment} to its on-disk representation.
 }
 \examples{
 # Mocking up an SCE:
@@ -42,6 +41,9 @@ tmp <- tempfile()
 saveObject(se, tmp)
 list.files(tmp, recursive=TRUE)
 
+}
+\seealso{
+\code{\link{readSingleCellExperiment}}, to read the SingleCellExperiment back into the R session.
 }
 \author{
 Aaron Lun

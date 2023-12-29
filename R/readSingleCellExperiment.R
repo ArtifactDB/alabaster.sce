@@ -3,13 +3,16 @@
 #' Read a \linkS4class{SingleCellExperiment} object from its on-disk representation.
 #' This is usually not directly called by users, but is instead called by dispatch in \code{\link{readObject}}.
 #'
-#' @param path String containing a path to a directory, itself created using the \code{\link{stageObject}} method for \linkS4class{SingleCellExperiment} objects.
+#' @param path String containing a path to a directory, itself created using the \code{\link{saveObject}} method for \linkS4class{SingleCellExperiment} objects.
 #' @param metadata Named list of metadata for this object, see \code{\link{readObjectFile}} for details.
 #' @param ... Further arguments passed to \code{\link{readRangedSummarizedExperiment}} and internal \code{\link{altReadObject}} calls.
 #' 
 #' @return A \linkS4class{SingleCellExperiment} object.
 #'
 #' @author Aaron Lun
+#'
+#' @seealso
+#' \code{"\link{saveObject,SingleCellExperiment-method}"}, to save the SingleCellExperiment to disk.
 #'
 #' @examples
 #' # Mocking up an SCE:

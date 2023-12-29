@@ -8,7 +8,7 @@
 readSingleCellExperiment(path, metadata, ...)
 }
 \arguments{
-\item{path}{String containing a path to a directory, itself created using the \code{\link{stageObject}} method for \linkS4class{SingleCellExperiment} objects.}
+\item{path}{String containing a path to a directory, itself created using the \code{\link{saveObject}} method for \linkS4class{SingleCellExperiment} objects.}
 
 \item{metadata}{Named list of metadata for this object, see \code{\link{readObjectFile}} for details.}
 
@@ -41,6 +41,9 @@ tmp <- tempfile()
 saveObject(se, tmp)
 readObject(tmp)
 
+}
+\seealso{
+\code{"\link{saveObject,SingleCellExperiment-method}"}, to save the SingleCellExperiment to disk.
 }
 \author{
 Aaron Lun

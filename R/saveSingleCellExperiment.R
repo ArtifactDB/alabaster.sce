@@ -1,6 +1,6 @@
-#' Save a SingleCellExperiment
+#' Save a SingleCellExperiment to disk
 #'
-#' Save a \linkS4class{SingleCellExperiment} to file inside the staging directory.
+#' Save a \linkS4class{SingleCellExperiment} to its on-disk representation.
 #' 
 #' @param x A \linkS4class{SingleCellExperiment} object or one of its subclasses.
 #' @inheritParams alabaster.base::saveObject
@@ -8,8 +8,10 @@
 #'
 #' @author Aaron Lun
 #' 
-#' @return A named list of metadata that follows the \code{single_cell_experiment} schema.
-#' The contents of \code{x} are saved into a \code{path} subdirectory inside \code{dir}.
+#' @return \code{x} is saved into \code{path} and \code{NULL} is invisibly returned.
+#'
+#' @seealso
+#' \code{\link{readSingleCellExperiment}}, to read the SingleCellExperiment back into the R session.
 #' 
 #' @examples
 #' # Mocking up an SCE:
