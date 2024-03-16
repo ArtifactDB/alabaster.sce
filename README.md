@@ -1,16 +1,17 @@
 # Save `SingleCellExperiment`s to file
 
+|Environment|Status|
+|---|---|
+|[BioC-release](https://bioconductor.org/packages/release/bioc/html/alabaster.sce.html)|[![Release OK](https://bioconductor.org/shields/build/release/bioc/alabaster.sce.svg)](http://bioconductor.org/checkResults/release/bioc-LATEST/alabaster.sce/)|
+|[BioC-devel](https://bioconductor.org/packages/devel/bioc/html/alabaster.sce.html)|[![Devel OK](https://bioconductor.org/shields/build/devel/bioc/alabaster.sce.svg)](http://bioconductor.org/checkResults/devel/bioc-LATEST/alabaster.sce/)|
+
 The **alabaster.sce** package implements methods for saving and loading `SingleCellExperiment` objects under the **alabaster** framework.
 It provides a language-agnostic method for serializing reduced dimensions and alternative experiments along with the usual bits and pieces from the `SummarizedExperiment` parent class.
-To get started, install the package and its dependencies from GitHub:
+To get started, install the package and its dependencies from Bioconductor:
 
 ```r
-devtools::install_github("ArtifactDB/alabaster.schemas")
-devtools::install_github("ArtifactDB/alabaster.base")
-devtools::install_github("ArtifactDB/alabaster.ranges")
-devtools::install_github("ArtifactDB/alabaster.matrix")
-devtools::install_github("ArtifactDB/alabaster.se")
-devtools::install_github("ArtifactDB/alabaster.sce")
+# install.packages("BiocManager")
+BiocManager::install("alabaster.sce")
 ```
 
 In the example below, we save a `SingleCellExperiment` object to file:
@@ -33,12 +34,9 @@ sce
 
 library(alabaster.sce)
 tmp <- tempfile()
-dir.create(tmp)
-meta <- stageObject(sce, tmp, "sce")
-meta[["$schema"]]
-## [1] "single_cell_experiment/v1.json"
+saveObject(sce, tmp)
 
-roundtrip <- loadObject(meta, tmp)
+roundtrip <- readObject(tmp)
 class(roundtrip)
 ## [1] "SingleCellExperiment"
 ## attr(,"package")
