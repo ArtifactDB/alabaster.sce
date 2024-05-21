@@ -38,6 +38,19 @@ test_that("stageObject works as expected for SCE objects", {
     expect_identical(colData(out2), colData(se))
 })
 
+test_that("saveObject works with some non-trivial rowRanges", {
+    all.ranges <- GRanges("chrX", IRanges(seq_len(nrow(mat) * 2), width=1))
+    rowRanges(se) <- splitAsList(all.ranges, rep(seq_len(nrow(mat)), length.out=length(all.ranges)))
+
+    tmp <- tempfile()
+    saveObject(se, tmp, "rnaseq")
+    out2 <- readObject(tmp)
+
+    expect_identical(rowData(out2), rowData(se))
+    expect_identical(rowRanges(out2), rowRanges(se))
+    expect_identical(rownames(out2), rownames(se))
+})
+
 test_that("stageObject works as expected with reduced dims inside", {
     reducedDims(se) <- list(PCA=matrix(rnorm(ncol(mat)*50), ncol=50), TSNE=cbind(TSNE1=runif(ncol(mat)), TSNE2=runif(ncol(mat))))
 
