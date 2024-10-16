@@ -26,11 +26,22 @@ Check out the `r Biocpkg("alabaster.base")` for more details on the motivation a
 
 # Quick start
 
-Given a `(Ranged)SingleCellExperiment`, we can use `stageObject()` to save it inside a staging directory:
+Given a `SingleCellExperiment`, we can use `saveObject()` to save it inside a staging directory:
 
 ```{r}
 library(SingleCellExperiment)
-example(SingleCellExperiment, echo=FALSE) # can't be bothered to copy it here.
+mat <- matrix(rpois(10000, 10), ncol=10)
+colnames(mat) <- letters[1:10]
+rownames(mat) <- sprintf("GENE_%i", seq_len(nrow(mat)))
+
+sce <- SingleCellExperiment(list(counts=mat))
+sce$stuff <- LETTERS[1:10]
+sce$blah <- runif(10)
+reducedDims(sce) <- list(
+ PCA=matrix(rnorm(ncol(sce)*10), ncol=10),
+ TSNE=matrix(rnorm(ncol(sce)*2), ncol=2)
+)
+altExps(sce) <- list(spikes=SummarizedExperiment(list(counts=mat[1:2,])))
 sce
 
 library(alabaster.sce)
