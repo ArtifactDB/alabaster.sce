@@ -36,12 +36,11 @@
 #'
 #' @export
 #' @aliases loadSingleCellExperiment
-#' @importFrom alabaster.se loadSummarizedExperiment
+#' @importFrom alabaster.se readRangedSummarizedExperiment loadSummarizedExperiment
 #' @import SingleCellExperiment alabaster.base 
 #' @importFrom jsonlite fromJSON
 readSingleCellExperiment <- function(path, metadata, ...) {
-    metadata$type <- "ranged_summarized_experiment"
-    se <- altReadObject(path, metadata, ...)
+    se <- readRangedSummarizedExperiment(path, metadata, ...) # see comments in readRangedSummarizedExperiment in alabaster.se.
     se <- as(se, "SingleCellExperiment")
 
     rddir <- file.path(path, "reduced_dimensions")
