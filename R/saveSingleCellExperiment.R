@@ -43,8 +43,7 @@ NULL
 #' @import SingleCellExperiment alabaster.base methods
 #' @importFrom jsonlite toJSON
 setMethod("saveObject", "SingleCellExperiment", function(x, path, ...) {
-    base <- as(x, "RangedSummarizedExperiment")
-    altSaveObject(base, path, ...)
+    callNextMethod() # see comments in saveObject,RangedSummarizedExperiment-method in alabaster.se.
 
     red.nms <- reducedDimNames(x)
     if (length(red.nms)) {
